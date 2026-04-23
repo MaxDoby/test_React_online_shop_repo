@@ -1,0 +1,34 @@
+:root {
+  --apricot: #ec796b;
+  --lilac: #e8e8f7;
+  --navy: #0a0a1a;
+}
+
+body {
+  margin: 0;
+  background-color: var(--navy);
+  color: var(--lilac);
+  overflow-x: hidden;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+}
+
+.bg-animated {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.15;
+  animation: float 20s infinite alternate;
+}
+
+@keyframes float {
+  from { transform: translate(0, 0); }
+  to { transform: translate(100px, 50px); }
+}
