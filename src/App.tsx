@@ -23,8 +23,8 @@ const PRODUSE_MOCK: Produs[] = [
     { id: 10, nume: 'Boxe DolbySurr', pret: 6750, categorie: 'Boxe', imagine: '/img/boxe_2.jpg' },
     { id: 11, nume: 'Mouse X-Ray', pret: 950, categorie: 'Mouse', imagine: '/img/MouseLogit.jpg' },
     { id: 12, nume: 'Tastatura RoboX', pret: 1750, categorie: 'Tastatura', imagine: '/img/Tast1.jpg' },
-    { id: 13, nume: 'Monitor LG Widescr', pret: 8500, categorie: 'Monitor', imagine: '/img/Monitor_LG.jpg' },
-    { id: 14, nume: 'Monitor Samsung', pret: 9750, categorie: 'Monitor', imagine: '/img/Monitor_Samsung.jpg' },
+    { id: 13, nume: 'Monitor LG Widescr', pret: 8500, categorie: 'Montor', imagine: '/img/Monitor_LG.jpg' },
+    { id: 14, nume: 'Monitor Samsung', pret: 9750, categorie: 'Montor', imagine: '/img/Monitor_Samsung.jpg' },
     { id: 15, nume: 'Televizor Philips', pret: 14500, categorie: 'Televizor', imagine: '/img/TV2.jpg' },
     { id: 16, nume: 'Televizor Sony', pret: 17500, categorie: 'Televizor', imagine: '/img/SonyTV.jpg' },
 ];
@@ -35,38 +35,32 @@ function App() {
     const [cosCount, setCosCount] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>(''); // Starea pentru textul căutat
     const [paginaCurenta, setPaginaCurenta] = useState<number>(1);
-    const [imagineSelectata, setImagineSelectata] = useState<string | null>(null); // Starea pentru poza marita
+    const [imagineSelectata, setImagineSelectata] = useState<string | null>(null);
 
-    // 2. Filtrare și Logică (Calculul datelor înainte de afișare)
-    // Filtram lista curentă după input, aplicăm toLowerCase ca să nu ne afecteze majusculele
+    // 2. Filtrare și Logică
+    // Filtram lista curentă după input, aplicăm toLowerCase
     const produseFiltrateDupaSearch = produse.filter((p) => p.nume.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    // Logica pentru Paginare (Câte produse vedem pe o "foaie")
-    const produsePePagina = 8; // Am pus 8 pentru a avea 2 rânduri a câte 4 cartele
+    // Logica pentru Paginare
+    const produsePePagina = 8;
     const ultimulProdus = paginaCurenta * produsePePagina;
     const primulProdus = ultimulProdus - produsePePagina;
-    // Taiem felia de produse pe care o afișăm efectiv
     const produseDeAfisat = produseFiltrateDupaSearch.slice(primulProdus, ultimulProdus);
     const totalPagini = Math.ceil(produseFiltrateDupaSearch.length / produsePePagina);
 
-    // 3. Funcții (Acțiunile utilizatorului)
-    const adaugaInCos = () => {
-        setCosCount(cosCount + 1);
-    };
+    // 3. Funcții
+    const adaugaInCos = () => setCosCount(cosCount + 1);
 
-    // Funcția de filtrare (Schimbă sursa de date pentru grid)
     const filtreazaProduse = (cat: string) => {
         if (cat === 'Toate') {
             setProduse(PRODUSE_MOCK); // Resetăm la lista originală
         } else {
-            const filtrate = PRODUSE_MOCK.filter((p) => p.categorie === cat);
-            setProduse(filtrate);
+            setProduse(PRODUSE_MOCK.filter((p) => p.categorie === cat));
         }
     };
 
     return (
         <div className="app-container">
-            {/* Fundalul cu forme difuze (Efectul vizual cerut) */}
             <div className="bg-animated">
                 <div className="blob" style={{ width: '600px', height: '600px', background: 'var(--apricot)', top: '-10%', left: '20%' }}></div>
                 <div
@@ -76,7 +70,6 @@ function App() {
             </div>
 
             <header className="header">
-                {/* Logotipul cu link spre pagina principala */}
                 <a
                     href="/"
                     className="logo-link"
@@ -86,11 +79,10 @@ function App() {
                     }}
                 >
                     <div className="logo">
-                        <span className="logo-icon">⚡</span> <span>Primul meu Online-Shop</span>
+                        <span className="logo-icon">⚡</span> Tech<span>Flow</span>
                     </div>
                 </a>
                 <div className="search-container">
-                    {/* Inputul de căutare - Actualizăm state-ul la fiecare tasta */}
                     <input
                         type="text"
                         className="search-input"
@@ -104,9 +96,8 @@ function App() {
                 </div>
             </header>
 
-            {/* Butoane de filtrare */}
-            <nav className="filter-nav" style={{ marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                {['Toate', 'Laptop', 'Mouse', 'Tastatura', 'Boxe', 'Televizor', 'Monitor'].map((cat) => (
+            <nav className="filter-nav" style={{ marginBottom: '40px', display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {['Toate', 'Laptop', 'Mouse', 'Tastatura'].map((cat) => (
                     <button
                         key={cat}
                         className="btn-filter"
@@ -120,35 +111,21 @@ function App() {
                 ))}
             </nav>
 
-            {/* Grid pentru produse */}
             <main className="product-grid">
                 {produseDeAfisat.map((produs) => (
                     <article key={produs.id} className="product-card">
-                        {/* Mutăm imaginea prima pentru a fi deasupra fundalului */}
-                        <img
-                            src={produs.imagine}
-                            alt={produs.nume}
-                            onClick={() => {
-                                console.log('Imagine selectată:', produs.imagine); // Hint pentru tine: verifică în consolă acum
-                                setImagineSelectata(produs.imagine);
-                            }}
-                            style={{ cursor: 'pointer', position: 'relative', zIndex: 10 }}
-                        />
-
-                        {/* Efectul de sticlă va sta în spate acum */}
-                        <div className="card-glass" style={{ pointerEvents: 'none' }}></div>
-
+                        <div className="card-glass"></div>
+                        <img src={produs.imagine} alt={produs.nume} onClick={() => setImagineSelectata(produs.imagine)} />
                         <h3>{produs.nume}</h3>
                         <p className="category">{produs.categorie}</p>
-
                         <div
                             className="price-row"
-                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}
+                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}
                         >
                             <span className="price" style={{ fontWeight: 'bold', color: 'var(--apricot)' }}>
                                 {produs.pret} Lei
                             </span>
-                            <button className="btn-add" onClick={adaugaInCos} style={{ cursor: 'pointer' }}>
+                            <button className="btn-add" onClick={adaugaInCos}>
                                 +
                             </button>
                         </div>
@@ -156,7 +133,6 @@ function App() {
                 ))}
             </main>
 
-            {/* Control Paginare */}
             <div
                 className="pagination-container"
                 style={{ marginTop: '40px', display: 'flex', gap: '15px', justifyContent: 'center', alignItems: 'center' }}
@@ -181,12 +157,10 @@ function App() {
                 <h3>🛒 Produse în coș: {cosCount}</h3>
             </footer>
 
-            {/* Modalul pentru marirea pozei (apare doar cand imagineSelectata are valoare) */}
             {imagineSelectata && (
                 <div className="modal-overlay" onClick={() => setImagineSelectata(null)}>
                     <div className="modal-content">
                         <img src={imagineSelectata} alt="Preview" />
-                        <button className="close-modal">X</button>
                     </div>
                 </div>
             )}
