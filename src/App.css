@@ -112,6 +112,15 @@
   color: white;
 }
 
+.filter-nav {
+    margin-bottom: 40px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap; /* Esențial pentru mobil: butoanele trec pe rândul următor */
+    padding: 0 10px;
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;

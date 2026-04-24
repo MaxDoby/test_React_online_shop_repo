@@ -1,5 +1,9 @@
 import './App.css';
 import { useState } from 'react';
+import { ProdusePePagina } from './components/productList.tsx';
+import { Footer } from './components/footer.tsx'
+import { Header } from './components/header.tsx'
+import { FilterNav } from './components/filterNav.tsx';
 
 // Definim o Interfata pentru produsul nostru
 interface Produs {
@@ -23,12 +27,13 @@ const PRODUSE_MOCK: Produs[] = [
     { id: 10, nume: 'Boxe DolbySurr', pret: 6750, categorie: 'Boxe', imagine: '/img/boxe_2.jpg' },
     { id: 11, nume: 'Mouse X-Ray', pret: 950, categorie: 'Mouse', imagine: '/img/MouseLogit.jpg' },
     { id: 12, nume: 'Tastatura RoboX', pret: 1750, categorie: 'Tastatura', imagine: '/img/Tast1.jpg' },
-    { id: 13, nume: 'Monitor LG Widescr', pret: 8500, categorie: 'Montor', imagine: '/img/Monitor_LG.jpg' },
-    { id: 14, nume: 'Monitor Samsung', pret: 9750, categorie: 'Montor', imagine: '/img/Monitor_Samsung.jpg' },
+    { id: 13, nume: 'Monitor LG Widescr', pret: 8500, categorie: 'Monitor', imagine: '/img/Monitor_LG.jpg' },
+    { id: 14, nume: 'Monitor Samsung', pret: 9750, categorie: 'Monitor', imagine: '/img/Monitor_Samsung.jpg' },
     { id: 15, nume: 'Televizor Philips', pret: 14500, categorie: 'Televizor', imagine: '/img/TV2.jpg' },
     { id: 16, nume: 'Televizor Sony', pret: 17500, categorie: 'Televizor', imagine: '/img/SonyTV.jpg' },
 ];
 
+const categorii = ['Toate', 'Laptop', 'Mouse', 'Tastatura', 'Monitor', 'Boxe', 'Casti'];
 function App() {
     // 1. Stările aplicației (Memoria)
     const [produse, setProduse] = useState<Produs[]>(PRODUSE_MOCK);
@@ -49,7 +54,10 @@ function App() {
     const totalPagini = Math.ceil(produseFiltrateDupaSearch.length / produsePePagina);
 
     // 3. Funcții
-    const adaugaInCos = () => setCosCount(cosCount + 1);
+
+      const adaugaInCos = () => {
+          setCosCount(cosCount + 1);
+      };
 
     const filtreazaProduse = (cat: string) => {
         if (cat === 'Toate') {
@@ -69,69 +77,18 @@ function App() {
                 ></div>
             </div>
 
-            <header className="header">
-                <a
-                    href="/"
-                    className="logo-link"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        window.location.reload();
-                    }}
-                >
-                    <div className="logo">
-                        <span className="logo-icon">⚡</span> Tech<span>Flow</span>
-                    </div>
-                </a>
-                <div className="search-container">
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="Caută în viitor..."
-                        value={searchQuery}
-                        onChange={(e) => {
-                            setSearchQuery(e.target.value);
-                            setPaginaCurenta(1);
-                        }}
-                    />
-                </div>
-            </header>
+            <Header
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setPaginaCurenta={setPaginaCurenta}
+            />
 
-            <nav className="filter-nav" style={{ marginBottom: '40px', display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                {['Toate', 'Laptop', 'Mouse', 'Tastatura'].map((cat) => (
-                    <button
-                        key={cat}
-                        className="btn-filter"
-                        onClick={() => {
-                            filtreazaProduse(cat);
-                            setPaginaCurenta(1);
-                        }}
-                    >
-                        {cat}
-                    </button>
-                ))}
-            </nav>
+            <FilterNav
+            categorii={categorii}
+            filtreazaProduse={filtreazaProduse}
+            />
 
-            <main className="product-grid">
-                {produseDeAfisat.map((produs) => (
-                    <article key={produs.id} className="product-card">
-                        <div className="card-glass"></div>
-                        <img src={produs.imagine} alt={produs.nume} onClick={() => setImagineSelectata(produs.imagine)} />
-                        <h3>{produs.nume}</h3>
-                        <p className="category">{produs.categorie}</p>
-                        <div
-                            className="price-row"
-                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}
-                        >
-                            <span className="price" style={{ fontWeight: 'bold', color: 'var(--apricot)' }}>
-                                {produs.pret} Lei
-                            </span>
-                            <button className="btn-add" onClick={adaugaInCos}>
-                                +
-                            </button>
-                        </div>
-                    </article>
-                ))}
-            </main>
+            <ProdusePePagina produseDeAfisat={produseDeAfisat} adaugaInCos={adaugaInCos} setImagineSelectata={setImagineSelectata} />
 
             <div
                 className="pagination-container"
@@ -153,9 +110,9 @@ function App() {
                 </button>
             </div>
 
-            <footer style={{ marginTop: '30px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
-                <h3>🛒 Produse în coș: {cosCount}</h3>
-            </footer>
+            <Footer
+            cosCount={cosCount}
+            />
 
             {imagineSelectata && (
                 <div className="modal-overlay" onClick={() => setImagineSelectata(null)}>
