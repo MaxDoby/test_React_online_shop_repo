@@ -213,3 +213,52 @@
 @keyframes float-tech {
   50% { transform: translate(30px, -50px) rotate(10deg); }
 }
+
+/* =========================================
+   6. RESPONSIVE DESIGN (PENTRU TELEFON)
+   ========================================= */
+
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column; /* Pune Sidebar-ul deasupra produselor */
+    padding: 10px;
+    gap: 20px;
+  }
+
+  .sidebar {
+    width: 100%;       /* Ocupă toată lățimea pe telefon */
+    position: static;  /* Nu mai stă fixat, ca să putem vedea produsele sub el */
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  .filter-nav {
+    flex-direction: row; /* Pe mobil, butoanele pot sta din nou pe rânduri */
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .content-area {
+    width: 100%;
+  }
+
+  /* Ajustăm și header-ul pentru mobil */
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .search-input {
+    max-width: 100%; /* Bara de căutare ocupă tot rândul */
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -9,16 +9,6 @@ import { calculeazaPaginarea } from './utils/usePagination.ts';
 import { adaugaInCos as adaugaCos } from './utils/useCosCount.ts';
 import { NewsTicker } from './components/newsTicker.tsx';
 
-// Definim o Interfata pentru produsul nostru
-
-interface Produs {
-    id: number;
-    nume: string;
-    pret: number;
-    categorie: string;
-    imagine: string;
-}
-
 function App() {
     const state = useAppState();
 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface Produs {
     id: number;
     nume: string;

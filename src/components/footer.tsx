@@ -1,5 +1,3 @@
-import React from "react";
-
 // Definim ce date primeste Footer-ul
 interface FooterProps {
     cosCount: number; // Numărul total de produse din coș

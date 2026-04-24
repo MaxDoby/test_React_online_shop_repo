@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HeaderProps {
     searchQuery: string;
     setSearchQuery: (value: string) => void;

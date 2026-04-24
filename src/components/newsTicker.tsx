@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const NewsTicker = () => {
     const mesaje = [
         '🔥 Reduceri de până la 50% la categoria Laptops!',

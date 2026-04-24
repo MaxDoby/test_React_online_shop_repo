@@ -1,14 +1,4 @@
 
-interface Produs {
-    id: number;
-    nume: string;
-    pret: number;
-    categorie: string;
-    imagine: string;
-}
-
-
-
 export const filtreazaDupaSearch = (produse: any[], searchQuery: string) => {
     return produse.filter((p) => 
         p.nume.toLowerCase().includes(searchQuery.toLowerCase())
