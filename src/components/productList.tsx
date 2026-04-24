@@ -20,7 +20,9 @@ export const ProdusePePagina = ({ produseDeAfisat, adaugaInCos, setImagineSelect
             {produseDeAfisat.map((produs) => (
                 <article key={produs.id} className="product-card">
                     <div className="card-glass"></div>
-                    <img src={produs.imagine} alt={produs.nume} onClick={() => setImagineSelectata(produs.imagine)} />
+                    <img src={produs.imagine} alt={produs.nume} onClick={ () => {
+                        console.log("Imagine click-uită:", produs.nume);
+                        setImagineSelectata(produs.imagine)}} />
                     <h3>{produs.nume}</h3>
                     <p className="category">{produs.categorie}</p>
                     <div className="price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>

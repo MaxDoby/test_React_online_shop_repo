@@ -19,7 +19,7 @@ export const useAppState = () => {
     useEffect(() => {
         const incarcaProduse = async () => {
             try {
-                const raspuns = await fetch('https://dummyjson.com/products');
+                const raspuns = await fetch('https://dummyjson.com/products?limit=100');
                 if (!raspuns.ok) throw new Error('Eroare la server!');
                 const date = await raspuns.json();
 

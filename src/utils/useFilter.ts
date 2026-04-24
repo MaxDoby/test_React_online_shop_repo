@@ -18,7 +18,7 @@ export const filtreazaDupaSearch = (produse: any[], searchQuery: string) => {
 
 export const logicFiltreazaProduse = async (cat: string, setProduse: any, setPaginaCurenta: any) => {
     try{
-        let url = 'https://dummyjson.com/products';
+        let url = 'https:dummyjson.com/products?limit=100';
         if (cat !== 'Toate') {
             url = `https://dummyjson.com/products/category/${cat.toLowerCase()}`;
         }

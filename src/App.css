@@ -1,22 +1,76 @@
-.app-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  text-align: center;
+/* =========================================
+   1. VARIABILE & FUNDAL GLOBAL
+   ========================================= */
+:root {
+  --apricot: #ec796b;
+  --lilac: #e8e8f7;
+  --navy-glow: rgba(74, 74, 226, 0.15);
 }
 
-/* Header & Logo */
+.app-container {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  color: white;
+  background: 
+    linear-gradient(to right, rgba(232, 232, 247, 0.03) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(to bottom, rgba(232, 232, 247, 0.03) 1px, transparent 1px) 0 0 / 40px 40px,
+    radial-gradient(circle at 30% -10%, rgba(236, 121, 107, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, var(--navy-glow) 0%, transparent 50%),
+    #0a0a0f;
+}
+
+/* Efect de scanline */
+.app-container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(232, 232, 247, 0.02) 50%, transparent);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* =========================================
+   2. LAYOUT PRINCIPAL (SIDEBAR + CONTENT)
+   ========================================= */
+.main-layout {
+  display: flex;
+  gap: 30px;
+  padding: 20px 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: flex-start;
+  position: relative;
+}
+
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 20px;
+  text-align: left;
+}
+
+.content-area {
+  flex-grow: 1;
+}
+
+/* =========================================
+   3. COMPONENTE (HEADER, TICKER, MODAL)
+   ========================================= */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 25px;
   margin-bottom: 40px;
-  flex-wrap: wrap;
   gap: 20px;
-}
-
-.logo-link {
-  text-decoration: none;
 }
 
 .logo {
@@ -24,32 +78,52 @@
   font-weight: 800;
   letter-spacing: 2px;
   color: var(--lilac);
+  text-decoration: none;
 }
-
 .logo span { color: var(--apricot); }
 
-/* Search Input */
-.search-input {
-  background: rgba(232, 232, 247, 0.05);
-  border: 1px solid rgba(232, 232, 247, 0.1);
-  padding: 12px 25px;
-  border-radius: 30px;
-  color: white;
-  width: 100%;
-  max-width: 300px;
-  transition: 0.3s;
+.logo-link {
+    text-decoration: none !important; /* Elimină sublinierea de pe link-ul părinte */
+    border: none;                     /* Uneori poate fi o bordură jos */
+    outline: none;
 }
 
-/* Grid-ul REPARAT: se adapteaza singur la latime */
+.news-ticker-container {
+  background: rgba(74, 74, 226, 0.8);
+  backdrop-filter: blur(5px);
+  color: white;
+  overflow: hidden;
+  padding: 12px 0;
+  white-space: nowrap;
+  margin-bottom: 20px;
+  border-block: 1px solid rgba(232, 232, 247, 0.1);
+}
+
+.news-ticker {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999 !important;
+  backdrop-filter: blur(10px);
+}
+
+/* =========================================
+   4. PRODUSE & CARTELE
+   ========================================= */
 .product-grid {
   display: grid;
-  /* Aceasta linie e magica: pune cat mai multe coloane de minim 250px incap pe ecran */
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 25px;
-  justify-items: center; /* Centreaza cartelele in celula lor */
 }
 
-/* Stilul cartelei */
 .product-card {
   position: relative;
   background: rgba(255, 255, 255, 0.03);
@@ -57,30 +131,24 @@
   border-radius: 24px;
   padding: 24px;
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: 0.3s;
   display: flex;
   flex-direction: column;
-  width: 100%; /* Ocupa toata latimea coloanei */
-  box-sizing: border-box;
 }
 
 .product-card:hover {
   transform: translateY(-10px);
   border-color: var(--apricot);
-  box-shadow: 0 15px 35px rgba(236, 121, 107, 0.15);
 }
 
-/* Repararea imaginilor */
 .product-card img {
   width: 100%;
-  height: 200px; /* Inaltime fixa pentru a alinia cartelele */
-  object-fit: contain; /* Previne turtirea pozei */
-  border-radius: 15px;
-  margin-bottom: 20px;
+  height: 200px;
+  object-fit: contain;
   mix-blend-mode: screen; 
   cursor: pointer;
   position: relative;
-  z-index: 5;
+  z-index: 10;
 }
 
 .card-glass {
@@ -90,17 +158,13 @@
   z-index: 1;
 }
 
-.category {
-  color: rgba(232, 232, 247, 0.5);
-  font-size: 0.9rem;
-  margin: 10px 0;
-}
-
-/* Butoane */
-.btn-filter, .btn-add {
-  background: rgba(232, 232, 247, 0.1);
-  border: 1px solid rgba(232, 232, 247, 0.2);
-  color: var(--lilac);
+/* =========================================
+   5. BUTOANE & ANIMAȚII
+   ========================================= */
+.btn-filter, .btn-add, .search-input {
+  background: rgba(232, 232, 247, 0.05);
+  border: 1px solid rgba(232, 232, 247, 0.1);
+  color: white;
   padding: 10px 20px;
   border-radius: 12px;
   cursor: pointer;
@@ -109,35 +173,43 @@
 
 .btn-filter:hover, .btn-add:hover {
   background: var(--apricot);
-  color: white;
 }
 
 .filter-nav {
-    margin-bottom: 40px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap; /* Esențial pentru mobil: butoanele trec pe rândul următor */
-    padding: 0 10px;
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  backdrop-filter: blur(8px);
+  flex-direction: column;
+  gap: 12px;
 }
 
-.modal-content img {
-  max-width: 90vw;
-  max-height: 80vh;
-  border-radius: 10px;
+@keyframes ticker {
+  100% { transform: translateX(-50%); }
+}
+
+/* Forme plutitoare */
+.main-layout::before, .main-layout::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  opacity: 0.1;
+  z-index: -1;
+  animation: float-tech 20s infinite ease-in-out;
+  border: 1px solid var(--lilac);
+}
+
+.main-layout::before {
+  width: 100px; height: 100px;
+  top: 15%; left: 5%;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.main-layout::after {
+  width: 120px; height: 120px;
+  bottom: 10%; right: 5%;
+  border-radius: 50%;
+  border-color: var(--apricot);
+  animation-delay: -5s;
+}
+
+@keyframes float-tech {
+  50% { transform: translate(30px, -50px) rotate(10deg); }
 }
