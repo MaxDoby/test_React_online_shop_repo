@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Produs {
     id: number;
@@ -8,13 +8,39 @@ interface Produs {
     imagine: string;
 }
 
-export const useAppState = (PRODUSE_MOCK: Produs[]) => {
+export const useAppState = () => {
     // 1. Stările aplicației (Memoria) - STRICT după codul tău
-    const [produse, setProduse] = useState<Produs[]>(PRODUSE_MOCK);
+    const [produse, setProduse] = useState<Produs[]>([]);
     const [cosCount, setCosCount] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [paginaCurenta, setPaginaCurenta] = useState<number>(1);
     const [imagineSelectata, setImagineSelectata] = useState<string | null>(null);
+
+    useEffect(() => {
+        const incarcaProduse = async () => {
+            try {
+                const raspuns = await fetch('https://dummyjson.com/products');
+                if (!raspuns.ok) throw new Error('Eroare la server!');
+                const date = await raspuns.json();
+
+                //Traducem datele primit de la server
+                const produseTraduse = date.products.map((p:any) => ({
+                    id: p.id,
+                    nume: p.title,
+                    pret: p.price,
+                    categorie: p.category,
+                    imagine: p.thumbnail
+                }))
+
+                setProduse(produseTraduse);
+            } catch (error) {
+                console.error('Eroare fetch:', error)
+            }
+        }
+
+        incarcaProduse();
+    }, [])
+    
 
     return {
         produse, setProduse,

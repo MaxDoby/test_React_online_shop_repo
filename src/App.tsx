@@ -1,11 +1,15 @@
 import './App.css';
-import { useState } from 'react';
 import { ProdusePePagina } from './components/productList.tsx';
 import { Footer } from './components/footer.tsx'
 import { Header } from './components/header.tsx'
 import { FilterNav } from './components/filterNav.tsx';
+import { useAppState } from './hooks/useAppState.ts';
+import { filtreazaDupaSearch, logicFiltreazaProduse } from './utils/useFilter.ts';
+import { calculeazaPaginarea } from './utils/usePagination.ts';
+import { adaugaInCos as adaugaCos } from './utils/useCosCount.ts';
 
 // Definim o Interfata pentru produsul nostru
+
 interface Produs {
     id: number;
     nume: string;
@@ -14,58 +18,37 @@ interface Produs {
     imagine: string;
 }
 
-const PRODUSE_MOCK: Produs[] = [
-    { id: 1, nume: 'Laptop Gaming', pret: 4500, categorie: 'Laptop', imagine: '/img/Laptop_Gaming.jpg' },
-    { id: 2, nume: 'Mouse Vertical', pret: 750, categorie: 'Mouse', imagine: '/img/Mouse1.jpg' },
-    { id: 3, nume: 'Tastatura Gaming', pret: 835, categorie: 'Tastatura', imagine: '/img/Tast2.jpg' },
-    { id: 4, nume: 'Casti SONY', pret: 1750, categorie: 'Casti', imagine: '/img/CastiSony.jpg' },
-    { id: 5, nume: 'Camera WEB Digit', pret: 450, categorie: 'Camera', imagine: '/img/WebCam.jpg' },
-    { id: 6, nume: 'Cablu HDMI', pret: 350, categorie: 'Cabluri', imagine: '/img/HDMI.webp' },
-    { id: 7, nume: 'Boxe Sven', pret: 1500, categorie: 'Boxe', imagine: '/img/boxe_1.jpg' },
-    { id: 8, nume: 'Laptop Apple', pret: 19750, categorie: 'Laptop', imagine: '/img/Laptop_Apple.jpg' },
-    { id: 9, nume: 'IPAD Air', pret: 14500, categorie: 'IPAD', imagine: '/img/IPAD.webp' },
-    { id: 10, nume: 'Boxe DolbySurr', pret: 6750, categorie: 'Boxe', imagine: '/img/boxe_2.jpg' },
-    { id: 11, nume: 'Mouse X-Ray', pret: 950, categorie: 'Mouse', imagine: '/img/MouseLogit.jpg' },
-    { id: 12, nume: 'Tastatura RoboX', pret: 1750, categorie: 'Tastatura', imagine: '/img/Tast1.jpg' },
-    { id: 13, nume: 'Monitor LG Widescr', pret: 8500, categorie: 'Monitor', imagine: '/img/Monitor_LG.jpg' },
-    { id: 14, nume: 'Monitor Samsung', pret: 9750, categorie: 'Monitor', imagine: '/img/Monitor_Samsung.jpg' },
-    { id: 15, nume: 'Televizor Philips', pret: 14500, categorie: 'Televizor', imagine: '/img/TV2.jpg' },
-    { id: 16, nume: 'Televizor Sony', pret: 17500, categorie: 'Televizor', imagine: '/img/SonyTV.jpg' },
-];
 
-const categorii = ['Toate', 'Laptop', 'Mouse', 'Tastatura', 'Monitor', 'Boxe', 'Casti'];
+
+const categorii = ['Toate', 'Laptops', 'Mobile-accessories', 'Tablets', 'Smartphones'];
+
+
 function App() {
-    // 1. Stările aplicației (Memoria)
-    const [produse, setProduse] = useState<Produs[]>(PRODUSE_MOCK);
-    const [cosCount, setCosCount] = useState<number>(0);
-    const [searchQuery, setSearchQuery] = useState<string>(''); // Starea pentru textul căutat
-    const [paginaCurenta, setPaginaCurenta] = useState<number>(1);
-    const [imagineSelectata, setImagineSelectata] = useState<string | null>(null);
+    const state = useAppState() 
+    
+    const { 
+        produse, setProduse, 
+        cosCount, setCosCount, 
+        searchQuery, setSearchQuery, 
+        paginaCurenta, setPaginaCurenta, 
+        imagineSelectata, setImagineSelectata 
+    } = state;
 
-    // 2. Filtrare și Logică
-    // Filtram lista curentă după input, aplicăm toLowerCase
-    const produseFiltrateDupaSearch = produse.filter((p) => p.nume.toLowerCase().includes(searchQuery.toLowerCase()));
+    // Filtrare și Logică
+    const produseFiltrateDupaSearch = filtreazaDupaSearch(produse, searchQuery);
+    const filtreazaProduse = (cat: string) => {
+        logicFiltreazaProduse(cat, setProduse, setPaginaCurenta);
+    };
 
     // Logica pentru Paginare
-    const produsePePagina = 8;
-    const ultimulProdus = paginaCurenta * produsePePagina;
-    const primulProdus = ultimulProdus - produsePePagina;
-    const produseDeAfisat = produseFiltrateDupaSearch.slice(primulProdus, ultimulProdus);
-    const totalPagini = Math.ceil(produseFiltrateDupaSearch.length / produsePePagina);
+    const { produseDeAfisat, totalPagini} = calculeazaPaginarea(produseFiltrateDupaSearch, paginaCurenta)
 
-    // 3. Funcții
+   const adaugaInCos = () => {
+    // Chemăm logica externă și îi dăm starea actuală și funcția de modificare
+    adaugaCos(cosCount, setCosCount);
+}; 
 
-      const adaugaInCos = () => {
-          setCosCount(cosCount + 1);
-      };
-
-    const filtreazaProduse = (cat: string) => {
-        if (cat === 'Toate') {
-            setProduse(PRODUSE_MOCK); // Resetăm la lista originală
-        } else {
-            setProduse(PRODUSE_MOCK.filter((p) => p.categorie === cat));
-        }
-    };
+    
 
     return (
         <div className="app-container">

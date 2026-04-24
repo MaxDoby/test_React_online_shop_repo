@@ -7,17 +7,40 @@ interface Produs {
     imagine: string;
 }
 
-export const filtreazaDupaSearch = (produse: Produs[], searchQuery: string) => {
-    // 2. Filtrare și Logică (partea de search)
-    return produse.filter((p) => p.nume.toLowerCase().includes(searchQuery.toLowerCase()));
+
+
+export const filtreazaDupaSearch = (produse: any[], searchQuery: string) => {
+    return produse.filter((p) => 
+        p.nume.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 };
 
-export const logicFiltreazaProduse = (cat: string, PRODUSE_MOCK: Produs[], setProduse: any, setPaginaCurenta: any) => {
-    // Funcția ta originală de filtrare
-    if (cat === 'Toate') {
-        setProduse(PRODUSE_MOCK);
-    } else {
-        setProduse(PRODUSE_MOCK.filter((p) => p.categorie === cat));
+
+export const logicFiltreazaProduse = async (cat: string, setProduse: any, setPaginaCurenta: any) => {
+    try{
+        let url = 'https://dummyjson.com/products';
+        if (cat !== 'Toate') {
+            url = `https://dummyjson.com/products/category/${cat.toLowerCase()}`;
+        }
+
+        const raspuns = await fetch(url);
+        if (!raspuns.ok) throw new Error('Eroare la filtrare')
+
+        const date = await raspuns.json();
+        // Aplicam si aici traducerea cheielor
+        const produseTraduse = date.products.map( (p:any) => ({
+            id: p.id,
+            nume: p.title,
+            pret: p.price,
+            categorie: p.category,
+            imagine: p.thumbnail
+        }) );
+
+        setProduse(produseTraduse);
+        setPaginaCurenta(1);
+    } catch (error) {
+        console.error('Eroare filtrare:', error)
     }
-    setPaginaCurenta(1);
-};
+
+        }
+    
