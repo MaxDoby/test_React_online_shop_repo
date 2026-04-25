@@ -1,51 +1,51 @@
 import './App.css';
-import { ProdusePePagina } from './components/productList.tsx';
+import { ProductsOnPage } from './components/productList.tsx';
 import { Footer } from './components/footer.tsx'
 import { Header } from './components/header.tsx'
 import { FilterNav } from './components/filterNav.tsx';
 import { useAppState } from './hooks/useAppState.ts';
-import { filtreazaDupaSearch, logicFiltreazaProduse } from './utils/useFilter.ts';
-import { calculeazaPaginarea } from './utils/usePagination.ts';
-import { adaugaInCos as adaugaCos } from './utils/useCosCount.ts';
+import { filterAfterSearch, logicFilterProducts } from './utils/useFilter.ts';
+import { calculatePagination } from './utils/usePagination.ts';
+import { addToCart as addCart, addToCart } from './utils/useCosCount.ts';
 import { NewsTicker } from './components/newsTicker.tsx';
 
 function App() {
     const state = useAppState();
 
     const {
-        produse,
-        setProduse,
-        cosCount,
-        setCosCount,
+        products,
+        setProducts,
+        cartCount,
+        setCartCount,
         searchQuery,
         setSearchQuery,
-        paginaCurenta,
-        setPaginaCurenta,
-        imagineSelectata,
-        setImagineSelectata,
+        currentPage,
+        setCurrentPage,
+        selectedImage,
+        setSelectedImage,
     } = state;
 
     // Filtrare și Logică
-    const produseFiltrateDupaSearch = filtreazaDupaSearch(produse, searchQuery);
-    const filtreazaProduse = (cat: string) => {
-        logicFiltreazaProduse(cat, setProduse, setPaginaCurenta);
+    const filteredProductsAfterSearch = filterAfterSearch(products, searchQuery);
+    const filterProducts = (cat: string) => {
+        logicFilterProducts(cat, setProducts, setCurrentPage);
     };
 
     // Logica pentru Paginare
-    const { produseDeAfisat, totalPagini } = calculeazaPaginarea(produseFiltrateDupaSearch, paginaCurenta);
+    const { productsToShow, totalPages } = calculatePagination(filteredProductsAfterSearch, currentPage);
 
-    const adaugaInCos = () => {
+    const addToCart = () => {
         // Chemăm logica externă și îi dăm starea actuală și funcția de modificare
-        adaugaCos(cosCount, setCosCount);
+        addCart(cartCount, setCartCount);
     };
-    const categoriiDinamice = ['Toate', ...Array.from(new Set(produse.map((p) => p.categorie)))];
+    const dinamicCategories = ['Toate', ...Array.from(new Set(products.map((p) => p.category)))];
 
     return (
         <div className="app-container">
             {/* Background animat */}
             <div className="bg-animated">{/* ... blob-urile tale ... */}</div>
 
-            <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} setPaginaCurenta={setPaginaCurenta} />
+            <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} setCurrentPage={setCurrentPage} />
 
             {/* Componenta NewsTicker sub Header */}
             <NewsTicker />
@@ -55,25 +55,25 @@ function App() {
                 {/* Coloana Stanga: Sidebar pentru Filtre */}
                 <aside className="sidebar">
                     <h3 className="sidebar-title">Categorii</h3>
-                    <FilterNav categorii={categoriiDinamice} filtreazaProduse={filtreazaProduse} />
+                    <FilterNav categories={dinamicCategories} filterProducts={filterProducts} />
                 </aside>
 
                 {/* Coloana Dreapta: Produse si Paginare */}
                 <main className="content-area">
-                    <ProdusePePagina produseDeAfisat={produseDeAfisat} adaugaInCos={adaugaInCos} setImagineSelectata={setImagineSelectata} />
+                    <ProductsOnPage productsToShow={productsToShow} addToCart={addToCart} setSelectedImage={setSelectedImage} />
 
                     <div className="pagination-container">
-                        <button className="btn-filter" disabled={paginaCurenta === 1} onClick={() => setPaginaCurenta(paginaCurenta - 1)}>
+                        <button className="btn-filter" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
                             Înapoi
                         </button>
                         <span>
                             {' '}
-                            Pagina {paginaCurenta} din {totalPagini || 1}{' '}
+                            Pagina {currentPage} din {totalPages || 1}{' '}
                         </span>
                         <button
                             className="btn-filter"
-                            disabled={paginaCurenta === totalPagini || totalPagini === 0}
-                            onClick={() => setPaginaCurenta(paginaCurenta + 1)}
+                            disabled={currentPage === totalPages || totalPages === 0}
+                            onClick={() => setCurrentPage(currentPage + 1)}
                         >
                             Înainte
                         </button>
@@ -81,12 +81,12 @@ function App() {
                 </main>
             </div>
 
-            <Footer cosCount={cosCount} />
+            <Footer cartCount={cartCount} />
 
-            {imagineSelectata && (
-                <div className="modal-overlay" onClick={() => setImagineSelectata(null)}>
+            {selectedImage && (
+                <div className="modal-overlay" onClick={() => setSelectedImage(null)}>
                     <div className="modal-content">
-                        <img src={imagineSelectata} alt="Preview" />
+                        <img src={selectedImage} alt="Preview" />
                     </div>
                 </div>
             )}

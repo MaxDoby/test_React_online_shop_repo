@@ -1,5 +1,5 @@
 export const NewsTicker = () => {
-    const mesaje = [
+    const message = [
         '🔥 Reduceri de până la 50% la categoria Laptops!',
         '🚀 Transport gratuit la comenzi de peste 200 RON!',
         '💎 Noi produse adăugate zilnic în stoc!',
@@ -9,9 +9,9 @@ export const NewsTicker = () => {
     return (
         <div className="news-ticker-container">
             <div className="news-ticker">
-                {/* Repetăm mesajele pentru a crea un flux continuu */}
-                <span>{mesaje.join(' • ')} • </span>
-                <span>{mesaje.join(' • ')} • </span>
+                {/* Repetăm messagele pentru a crea un flux continuu */}
+                <span>{message.join(' • ')} • </span>
+                <span>{message.join(' • ')} • </span>
             </div>
         </div>
     );

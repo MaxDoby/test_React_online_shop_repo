@@ -1,10 +1,10 @@
 interface HeaderProps {
     searchQuery: string;
     setSearchQuery: (value: string) => void;
-    setPaginaCurenta: (pagina: number) => void
+    setCurrentPage: (pagina: number) => void
 }
 
-export const Header = ({ searchQuery, setSearchQuery, setPaginaCurenta }: HeaderProps) => {
+export const Header = ({ searchQuery, setSearchQuery, setCurrentPage }: HeaderProps) => {
     return (
         <header className="header">
             <a
@@ -27,7 +27,7 @@ export const Header = ({ searchQuery, setSearchQuery, setPaginaCurenta }: Header
                     value={searchQuery}
                     onChange={(e) => {
                         setSearchQuery(e.target.value);
-                        setPaginaCurenta(1);
+                        setCurrentPage(1);
                     }}
                 />
             </div>

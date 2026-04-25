@@ -1,33 +1,33 @@
-interface Produs {
+interface Product {
     id: number;
-    nume: string;
-    pret: number;
-    categorie: string;
-    imagine: string;
+    title: string;
+    price: number;
+    category: string;
+    thumbnail: string;
 }
 
-interface ProdusePePaginaProps {
-    produseDeAfisat: Produs[];
-    adaugaInCos: () => void;
-    setImagineSelectata: (img: string | null) => void;
+interface ProductsOnPage {
+    productsToShow: Product[];
+    addToCart: () => void;
+    setSelectedImage: (img: string | null) => void;
 }
 
-export const ProdusePePagina = ({ produseDeAfisat, adaugaInCos, setImagineSelectata }: ProdusePePaginaProps) => {
+export const ProductsOnPage = ({ productsToShow, addToCart, setSelectedImage }: ProductsOnPage) => {
     return (
         <main className="product-grid">
-            {produseDeAfisat.map((produs) => (
-                <article key={produs.id} className="product-card">
+            {productsToShow.map((product) => (
+                <article key={product.id} className="product-card">
                     <div className="card-glass"></div>
-                    <img src={produs.imagine} alt={produs.nume} onClick={ () => {
-                        console.log("Imagine click-uită:", produs.nume);
-                        setImagineSelectata(produs.imagine)}} />
-                    <h3>{produs.nume}</h3>
-                    <p className="category">{produs.categorie}</p>
+                    <img src={product.thumbnail} alt={product.title} onClick={ () => {
+                        console.log("Imagine click-uită:", product.title);
+                        setSelectedImage(product.thumbnail)}} />
+                    <h3>{product.title}</h3>
+                    <p className="category">{product.category}</p>
                     <div className="price-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                         <span className="price" style={{ fontWeight: 'bold', color: 'var(--apricot)' }}>
-                            {produs.pret} Lei
+                            {product.price} Lei
                         </span>
-                        <button className="btn-add" onClick={adaugaInCos}>
+                        <button className="btn-add" onClick={addToCart}>
                             +
                         </button>
                     </div>

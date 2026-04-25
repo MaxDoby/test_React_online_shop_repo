@@ -262,3 +262,11 @@
     grid-template-columns: 1fr;
   }
 }
+
+.pagination-container{
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}

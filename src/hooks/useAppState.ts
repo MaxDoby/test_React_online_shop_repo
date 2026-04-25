@@ -1,52 +1,43 @@
 import { useState, useEffect } from 'react';
 
-interface Produs {
+interface Product {
     id: number;
-    nume: string;
-    pret: number;
-    categorie: string;
-    imagine: string;
+    title: string;
+    price: number;
+    category: string;
+    thumbnail: string;
 }
 
 export const useAppState = () => {
-    // 1. Stările aplicației (Memoria) - STRICT după codul tău
-    const [produse, setProduse] = useState<Produs[]>([]);
-    const [cosCount, setCosCount] = useState<number>(0);
+    // 1. Stările aplicației (Memoria) 
+    const [products, setProducts] = useState<Product[]>([]);
+    const [cartCount, setCartCount] = useState<number>(0);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [paginaCurenta, setPaginaCurenta] = useState<number>(1);
-    const [imagineSelectata, setImagineSelectata] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     useEffect(() => {
-        const incarcaProduse = async () => {
+        const uploadProducts = async () => {
             try {
-                const raspuns = await fetch('https://dummyjson.com/products?limit=100');
-                if (!raspuns.ok) throw new Error('Eroare la server!');
-                const date = await raspuns.json();
-
-                //Traducem datele primit de la server
-                const produseTraduse = date.products.map((p:any) => ({
-                    id: p.id,
-                    nume: p.title,
-                    pret: p.price,
-                    categorie: p.category,
-                    imagine: p.thumbnail
-                }))
-
-                setProduse(produseTraduse);
+                const response = await fetch('https://dummyjson.com/products?limit=100');
+                if (!response.ok) throw new Error('Server Error');
+                const date = await response.json();
+                
+                setProducts(date.products);
             } catch (error) {
-                console.error('Eroare fetch:', error)
+                console.error('Fetch Error:', error)
             }
         }
 
-        incarcaProduse();
+        uploadProducts();
     }, [])
     
 
     return {
-        produse, setProduse,
-        cosCount, setCosCount,
+        products, setProducts,
+        cartCount, setCartCount,
         searchQuery, setSearchQuery,
-        paginaCurenta, setPaginaCurenta,
-        imagineSelectata, setImagineSelectata,
+        currentPage, setCurrentPage,
+        selectedImage, setSelectedImage,
     };
 };

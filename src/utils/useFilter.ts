@@ -1,33 +1,27 @@
 
-export const filtreazaDupaSearch = (produse: any[], searchQuery: string) => {
-    return produse.filter((p) => 
-        p.nume.toLowerCase().includes(searchQuery.toLowerCase())
+export const filterAfterSearch = (products: any[], searchQuery: string) => {
+    return products.filter((p) => 
+        p.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 };
 
 
-export const logicFiltreazaProduse = async (cat: string, setProduse: any, setPaginaCurenta: any) => {
+export const logicFilterProducts = async (cat: string, setProducts: any, setCurrentPage: any) => {
     try{
         let url = 'https://dummyjson.com/products?limit=100';
         if (cat !== 'Toate') {
             url = `https://dummyjson.com/products/category/${cat.toLowerCase()}?limit=100`;
         }
 
-        const raspuns = await fetch(url);
-        if (!raspuns.ok) throw new Error('Eroare la filtrare')
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Eroare la filtrare')
 
-        const date = await raspuns.json();
+        const date = await response.json();
         // Aplicam si aici traducerea cheielor
-        const produseTraduse = date.products.map( (p:any) => ({
-            id: p.id,
-            nume: p.title,
-            pret: p.price,
-            categorie: p.category,
-            imagine: p.thumbnail
-        }) );
+       
 
-        setProduse(produseTraduse);
-        setPaginaCurenta(1);
+        setProducts(date.products);
+        setCurrentPage(1);
     } catch (error) {
         console.error('Eroare filtrare:', error)
     }

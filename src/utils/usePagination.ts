@@ -1,11 +1,11 @@
-export const calculeazaPaginarea = (produseFiltrateDupaSearch: any[], paginaCurenta: number) => {
+export const calculatePagination = (filteredProductsAfterSearch: any[], currentPage: number) => {
     // Logica ta pentru Paginare
-    const produsePePagina = 8;
-    const ultimulProdus = paginaCurenta * produsePePagina;
-    const primulProdus = ultimulProdus - produsePePagina;
+    const productsOnPage = 9;
+    const lastProduct = currentPage * productsOnPage;
+    const firstProduct = lastProduct - productsOnPage;
 
-    const produseDeAfisat = produseFiltrateDupaSearch.slice(primulProdus, ultimulProdus);
-    const totalPagini = Math.ceil(produseFiltrateDupaSearch.length / produsePePagina);
+    const productsToShow = filteredProductsAfterSearch.slice(firstProduct, lastProduct);
+    const totalPages = Math.ceil(filteredProductsAfterSearch.length / productsOnPage);
 
-    return { produseDeAfisat, totalPagini };
+    return { productsToShow, totalPages };
 };

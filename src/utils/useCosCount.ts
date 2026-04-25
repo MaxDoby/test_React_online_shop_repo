@@ -1,3 +1,3 @@
-export const adaugaInCos = (cosCount: number, setCosCount: (val: number) => void) => {
-    setCosCount(cosCount + 1);
+export const addToCart = (cartCount: number, setCartCount: (val: number) => void) => {
+    setCartCount(cartCount + 1);
 };

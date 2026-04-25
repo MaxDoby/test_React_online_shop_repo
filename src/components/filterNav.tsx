@@ -1,15 +1,15 @@
 import { Button } from "./button";
 
 interface FilterNavProps {
-    categorii: string[];
-    filtreazaProduse: (cat:string) => void;
+    categories: string[];
+    filterProducts: (cat:string) => void;
 }
 
-export const FilterNav = ({ categorii, filtreazaProduse }:FilterNavProps) => {
+export const FilterNav = ({ categories, filterProducts }:FilterNavProps) => {
     return (
         <nav className="filter-nav">
-            {categorii.map((cat) => (
-                <Button key={cat} className="btn-filter" onClick={() => filtreazaProduse(cat)}
+            {categories.map((cat) => (
+                <Button key={cat} className="btn-filter" onClick={() => filterProducts(cat)}
                 >
                     {cat}
                 </Button>
