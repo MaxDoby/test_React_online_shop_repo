@@ -1,272 +1,458 @@
 /* =========================================
-   1. VARIABILE & FUNDAL GLOBAL
+   1. VARIABILE & GLOBAL
    ========================================= */
+
 :root {
-  --apricot: #ec796b;
-  --lilac: #e8e8f7;
-  --navy-glow: rgba(74, 74, 226, 0.15);
+	--apricot: #ec796b;
+	--lilac: #e8e8f7;
+	--navy-glow: rgba(74, 74, 226, 0.15);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: #0a0a0f;
+	font-family: Arial, sans-serif;
+}
+
+button,
+input {
+	font: inherit;
 }
 
 .app-container {
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-  color: white;
-  background: 
-    linear-gradient(to right, rgba(232, 232, 247, 0.03) 1px, transparent 1px) 0 0 / 40px 40px,
-    linear-gradient(to bottom, rgba(232, 232, 247, 0.03) 1px, transparent 1px) 0 0 / 40px 40px,
-    radial-gradient(circle at 30% -10%, rgba(236, 121, 107, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 80% 80%, var(--navy-glow) 0%, transparent 50%),
-    #0a0a0f;
+	min-height: 100vh;
+	position: relative;
+	overflow-x: hidden;
+	color: white;
+	background:
+		linear-gradient(to right, rgba(232, 232, 247, 0.03) 1px, transparent 1px) 0 0 / 40px 40px,
+		linear-gradient(to bottom, rgba(232, 232, 247, 0.03) 1px, transparent 1px) 0 0 / 40px 40px,
+		radial-gradient(circle at 30% -10%, rgba(236, 121, 107, 0.08) 0%, transparent 40%),
+		radial-gradient(circle at 80% 80%, var(--navy-glow) 0%, transparent 50%),
+		#0a0a0f;
 }
 
-/* Efect de scanline */
 .app-container::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent, rgba(232, 232, 247, 0.02) 50%, transparent);
-  background-size: 100% 4px;
-  pointer-events: none;
-  z-index: 1;
+	content: "";
+	position: fixed;
+	inset: 0;
+	background: linear-gradient(to bottom, transparent, rgba(232, 232, 247, 0.02) 50%, transparent);
+	background-size: 100% 4px;
+	pointer-events: none;
+	z-index: 1;
 }
 
 /* =========================================
-   2. LAYOUT PRINCIPAL (SIDEBAR + CONTENT)
+   2. LAYOUT PRINCIPAL
    ========================================= */
+
 .main-layout {
-  display: flex;
-  gap: 30px;
-  padding: 20px 0;
-  max-width: 1400px;
-  margin: 0 auto;
-  align-items: flex-start;
-  position: relative;
+	display: flex;
+	gap: 30px;
+	padding: 20px 0;
+	max-width: 1400px;
+	margin: 0 auto;
+	align-items: flex-start;
+	position: relative;
 }
 
 .sidebar {
-  width: 250px;
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 25px;
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: sticky;
-  top: 20px;
-  text-align: left;
+	width: 250px;
+	flex-shrink: 0;
+	background: rgba(255, 255, 255, 0.05);
+	padding: 25px;
+	border-radius: 20px;
+	backdrop-filter: blur(15px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	position: sticky;
+	top: 20px;
+	text-align: left;
 }
 
 .content-area {
-  flex-grow: 1;
+	flex-grow: 1;
+	min-width: 0;
 }
 
 /* =========================================
-   3. COMPONENTE (HEADER, TICKER, MODAL)
+   3. HEADER
    ========================================= */
+
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 25px;
-  margin-bottom: 40px;
-  gap: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 25px;
+	margin-bottom: 40px;
+	gap: 20px;
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--lilac);
-  text-decoration: none;
+	font-size: 24px;
+	font-weight: 800;
+	letter-spacing: 2px;
+	color: var(--lilac);
+	text-decoration: none;
 }
-.logo span { color: var(--apricot); }
+
+.logo span {
+	color: var(--apricot);
+}
 
 .logo-link {
-    text-decoration: none !important; /* Elimină sublinierea de pe link-ul părinte */
-    border: none;                     /* Uneori poate fi o bordură jos */
-    outline: none;
+	text-decoration: none !important;
+	border: none;
+	outline: none;
 }
 
+.search-container {
+	display: flex;
+	align-items: center;
+}
+
+.search-input {
+	width: 280px;
+	max-width: 100%;
+	background: rgba(232, 232, 247, 0.05);
+	border: 1px solid rgba(232, 232, 247, 0.1);
+	color: white;
+	padding: 10px 20px;
+	border-radius: 12px;
+	cursor: text;
+	transition: 0.3s;
+}
+
+.search-input:focus {
+	outline: none;
+	border-color: var(--apricot);
+	box-shadow: 0 0 0 3px rgba(236, 121, 107, 0.15);
+}
+
+.search-input::placeholder {
+	color: rgba(255, 255, 255, 0.6);
+}
+
+/* =========================================
+   4. NEWS TICKER
+   ========================================= */
+
 .news-ticker-container {
-  background: rgba(74, 74, 226, 0.8);
-  backdrop-filter: blur(5px);
-  color: white;
-  overflow: hidden;
-  padding: 12px 0;
-  white-space: nowrap;
-  margin-bottom: 20px;
-  border-block: 1px solid rgba(232, 232, 247, 0.1);
+	background: rgba(74, 74, 226, 0.8);
+	backdrop-filter: blur(5px);
+	color: white;
+	overflow: hidden;
+	padding: 12px 0;
+	white-space: nowrap;
+	margin-bottom: 20px;
+	border-block: 1px solid rgba(232, 232, 247, 0.1);
 }
 
 .news-ticker {
-  display: inline-block;
-  animation: ticker 30s linear infinite;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999 !important;
-  backdrop-filter: blur(10px);
+	display: inline-block;
+	animation: ticker 30s linear infinite;
 }
 
 /* =========================================
-   4. PRODUSE & CARTELE
+   5. PRODUSE & CARTELE
    ========================================= */
+
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 25px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: 25px;
 }
 
 .product-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  padding: 24px;
-  backdrop-filter: blur(10px);
-  transition: 0.3s;
-  display: flex;
-  flex-direction: column;
+	position: relative;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 24px;
+	padding: 24px;
+	backdrop-filter: blur(10px);
+	transition: 0.3s;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	overflow: hidden;
 }
 
 .product-card:hover {
-  transform: translateY(-10px);
-  border-color: var(--apricot);
-}
-
-.product-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: contain;
-  mix-blend-mode: screen; 
-  cursor: pointer;
-  position: relative;
-  z-index: 10;
+	transform: translateY(-10px);
+	border-color: var(--apricot);
 }
 
 .card-glass {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.product-card h3 {
+	margin: 0;
+	font-size: 20px;
+	line-height: 1.25;
+	color: white;
+	position: relative;
+	z-index: 2;
+}
+
+.product-card p {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.85);
+	position: relative;
+	z-index: 2;
+}
+
+.product-image-button {
+	width: 100%;
+	height: 220px;
+	padding: 12px;
+	border: none;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.96);
+	cursor: pointer;
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.product-image-button img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.product-card img {
+	max-width: 100%;
+}
+
+.price-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	position: relative;
+	z-index: 2;
+}
+
+.old-price {
+	color: rgba(255, 255, 255, 0.5);
+	text-decoration: line-through;
+}
+
+.price {
+	color: var(--apricot);
+	font-weight: 700;
 }
 
 /* =========================================
-   5. BUTOANE & ANIMAȚII
+   6. BUTOANE
    ========================================= */
-.btn-filter, .btn-add, .search-input {
-  background: rgba(232, 232, 247, 0.05);
-  border: 1px solid rgba(232, 232, 247, 0.1);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s;
+
+.btn-filter,
+.btn-add {
+	background: rgba(232, 232, 247, 0.05);
+	border: 1px solid rgba(232, 232, 247, 0.1);
+	color: white;
+	padding: 10px 20px;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: 0.3s;
 }
 
-.btn-filter:hover, .btn-add:hover {
-  background: var(--apricot);
+.btn-filter:hover,
+.btn-add:hover {
+	background: var(--apricot);
+}
+
+.btn-filter:disabled,
+.btn-add:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.btn-add {
+	min-width: 52px;
+	font-weight: 700;
 }
 
 .filter-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-@keyframes ticker {
-  100% { transform: translateX(-50%); }
-}
-
-/* Forme plutitoare */
-.main-layout::before, .main-layout::after {
-  content: "";
-  position: fixed;
-  pointer-events: none;
-  opacity: 0.1;
-  z-index: -1;
-  animation: float-tech 20s infinite ease-in-out;
-  border: 1px solid var(--lilac);
-}
-
-.main-layout::before {
-  width: 100px; height: 100px;
-  top: 15%; left: 5%;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-
-.main-layout::after {
-  width: 120px; height: 120px;
-  bottom: 10%; right: 5%;
-  border-radius: 50%;
-  border-color: var(--apricot);
-  animation-delay: -5s;
-}
-
-@keyframes float-tech {
-  50% { transform: translate(30px, -50px) rotate(10deg); }
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 }
 
 /* =========================================
-   6. RESPONSIVE DESIGN (PENTRU TELEFON)
+   7. MODAL
+   ========================================= */
+
+.modal-overlay {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	border: none;
+	background: rgba(0, 0, 0, 0.9);
+	z-index: 9999 !important;
+	backdrop-filter: blur(10px);
+	cursor: pointer;
+}
+
+.modal-content {
+	display: block;
+	cursor: default;
+}
+
+.modal-content img {
+	display: block;
+	max-width: 90vw;
+	max-height: 90vh;
+	object-fit: contain;
+	border-radius: 16px;
+	background: white;
+	padding: 16px;
+}
+
+/* =========================================
+   8. PAGINARE
+   ========================================= */
+
+.pagination-container {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+}
+
+.pagination-container button {
+	background: rgba(232, 232, 247, 0.05);
+	border: 1px solid rgba(232, 232, 247, 0.1);
+	color: white;
+	padding: 10px 18px;
+	border-radius: 12px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.pagination-container button:hover {
+	background: var(--apricot);
+}
+
+.pagination-container button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* =========================================
+   9. FORME PLUTITOARE
+   ========================================= */
+
+.main-layout::before,
+.main-layout::after {
+	content: "";
+	position: fixed;
+	pointer-events: none;
+	opacity: 0.1;
+	z-index: -1;
+	animation: float-tech 20s infinite ease-in-out;
+	border: 1px solid var(--lilac);
+}
+
+.main-layout::before {
+	width: 100px;
+	height: 100px;
+	top: 15%;
+	left: 5%;
+	clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.main-layout::after {
+	width: 120px;
+	height: 120px;
+	bottom: 10%;
+	right: 5%;
+	border-radius: 50%;
+	border-color: var(--apricot);
+	animation-delay: -5s;
+}
+
+/* =========================================
+   10. ANIMAȚII
+   ========================================= */
+
+@keyframes ticker {
+	100% {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes float-tech {
+	50% {
+		transform: translate(30px, -50px) rotate(10deg);
+	}
+}
+
+/* =========================================
+   11. RESPONSIVE DESIGN
    ========================================= */
 
 @media (max-width: 768px) {
-  .main-layout {
-    flex-direction: column; /* Pune Sidebar-ul deasupra produselor */
-    padding: 10px;
-    gap: 20px;
-  }
+	.main-layout {
+		flex-direction: column;
+		padding: 10px;
+		gap: 20px;
+	}
 
-  .sidebar {
-    width: 100%;       /* Ocupă toată lățimea pe telefon */
-    position: static;  /* Nu mai stă fixat, ca să putem vedea produsele sub el */
-    padding: 15px;
-    box-sizing: border-box;
-  }
+	.sidebar {
+		width: 100%;
+		position: static;
+		padding: 15px;
+		box-sizing: border-box;
+	}
 
-  .filter-nav {
-    flex-direction: row; /* Pe mobil, butoanele pot sta din nou pe rânduri */
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+	.filter-nav {
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
 
-  .content-area {
-    width: 100%;
-  }
+	.content-area {
+		width: 100%;
+	}
 
-  /* Ajustăm și header-ul pentru mobil */
-  .header {
-    flex-direction: column;
-    text-align: center;
-  }
+	.header {
+		flex-direction: column;
+		text-align: center;
+	}
 
-  .search-input {
-    max-width: 100%; /* Bara de căutare ocupă tot rândul */
-  }
+	.search-container,
+	.search-input {
+		width: 100%;
+	}
 
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+	.product-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
 
 @media (max-width: 480px) {
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
-}
+	.product-grid {
+		grid-template-columns: 1fr;
+	}
 
-.pagination-container{
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
+	.product-image-button {
+		height: 200px;
+	}
 }
