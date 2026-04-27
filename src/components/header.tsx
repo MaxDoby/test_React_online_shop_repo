@@ -1,29 +1,26 @@
 interface HeaderProps {
-    searchQuery: string;
-    setSearchQuery: (value: string) => void;
-    setCurrentPage: (pagina: number) => void
+    cartCount: number;
+    openCart: () => void;
+    openShop: () => void;
 }
 
-const Header = ({ searchQuery, setSearchQuery, setCurrentPage }: HeaderProps) => (
+const Header = ({ cartCount, openCart, openShop }: HeaderProps) => (
 	<header className="header">
-		<a href="/" className="logo-link">
+		<button type="button" className="logo-link header-reset-button" onClick={openShop}>
 			<div className="logo">
 				<span className="logo-icon">⚡</span>
 				Tech
 				<span>Flow</span>
 			</div>
-		</a>
-		<div className="search-container">
-			<input
-				type="text"
-				className="search-input"
-				placeholder="Caută în viitor..."
-				value={searchQuery}
-				onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-            />
+		</button>
+
+		<div className="cart-indicator">
+			<button type="button" className="cart-icon-button header-reset-button" onClick={openCart} aria-label="Deschide coșul">
+				<span className="cart-icon">🛒</span>
+			</button>
+
+			<span>Checkout:</span>
+			<span className="cart-count">{cartCount}</span>
 		</div>
 	</header>
 );

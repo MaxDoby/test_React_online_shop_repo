@@ -4,91 +4,109 @@ import Footer from './components/footer.tsx';
 import Header from './components/header.tsx';
 import FilterNav from './components/filterNav.tsx';
 import useAppState from './hooks/useAppState.ts';
-import { filterAfterSearch, logicFilterProducts } from './utils/useFilter.ts';
+import logicFilterProducts from './utils/useFilter.ts';
 import calculatePagination from './utils/usePagination.ts';
-import addCart from './utils/useCosCount.ts';
 import NewsTicker from './components/newsTicker.tsx';
+import SearchCont from './components/searchCont.tsx';
+import CartPage from './components/cartPage.tsx';
 
 const App = () => {
 	const state = useAppState();
 
 	const {
 		products,
-		setProducts,
+		categories,
 		cartCount,
-		setCartCount,
+		addToCart,
 		searchQuery,
 		setSearchQuery,
 		currentPage,
 		setCurrentPage,
 		selectedImage,
 		setSelectedImage,
+		setActiveCategory,
+		totalProducts,
+		productsOnPage,
+		cartItems,
+		cartTotal,
+		currentView,
+		setCurrentView,
+		removeFromCart,
+		clearCart,
+		checkout,
+		increaseCartItemQuantity,
+		decreaseCartItemQuantity,
 	} = state;
 
-	// Filtrare și Logică
-	const filteredProductsAfterSearch = filterAfterSearch(products, searchQuery);
+	// Filtrare si Logica
 	const filterProducts = (cat: string) => {
-		logicFilterProducts(cat, setProducts, setCurrentPage);
+		logicFilterProducts(cat, setActiveCategory, setCurrentPage, setSearchQuery);
 	};
 
 	// Logica pentru Paginare
-	const {
-		productsToShow,
-		totalPages,
-	} = calculatePagination(filteredProductsAfterSearch, currentPage);
-
-	const addToCart = () => {
-		// Chemăm logica externă și îi dăm starea actuală și funcția de modificare
-		addCart(cartCount, setCartCount);
-	};
-	const dinamicCategories = ['Toate', ...Array.from(new Set(products.map((p) => p.category)))];
+	const { totalPages } = calculatePagination(totalProducts, productsOnPage);
 
 	return (
 		<div className="app-container">
 			{/* Background animat */}
-			<div className="bg-animated">{/* ... blob-urile tale ... */}</div>
+			<div className="bg-animated" />
 
-			<Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} setCurrentPage={setCurrentPage} />
+			<Header cartCount={cartCount} openCart={() => setCurrentView('cart')} openShop={() => setCurrentView('shop')} />
 
 			{/* Componenta NewsTicker sub Header */}
 			<NewsTicker />
 
+			<SearchCont searchQuery={searchQuery} setSearchQuery={setSearchQuery} setCurrentPage={setCurrentPage} />
+
 			{/* NOU: Layout principal cu doua coloane */}
-			<div className="main-layout">
-				{/* Coloana Stanga: Sidebar pentru Filtre */}
-				<aside className="sidebar">
-					<h3 className="sidebar-title">Categorii</h3>
-					<FilterNav categories={dinamicCategories} filterProducts={filterProducts} />
-				</aside>
+			{currentView === 'shop' ? (
+				<div className="main-layout">
+					<aside className="sidebar">
+						<h3 className="sidebar-title">Categorii</h3>
+						<FilterNav categories={categories} filterProducts={filterProducts} />
+					</aside>
 
-				{/* Coloana Dreapta: Produse si Paginare */}
-				<main className="content-area">
-					<ProductsOnPage
-						productsToShow={productsToShow}
-						addToCart={addToCart}
-						setSelectedImage={setSelectedImage} />
+					<main className="content-area">
+						<ProductsOnPage
+							productsToShow={products}
+							addToCart={addToCart}
+							setSelectedImage={setSelectedImage}
+						/>
 
-					<div className="pagination-container">
-						<button type="button" className="btn-filter" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-							Înapoi
-						</button>
-						<span>
-							{' '}
-							Pagina {currentPage} din {totalPages || 1}{' '}
-						</span>
-						<button
-							type="button"
-							className="btn-filter"
-							disabled={currentPage === totalPages || totalPages === 0}
-							onClick={() => setCurrentPage(currentPage + 1)}
-                        >
-							Înainte
-						</button>
-					</div>
-				</main>
-			</div>
+						<div className="pagination-container">
+							<button type="button" className="btn-filter" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
+								Înapoi
+							</button>
 
-			<Footer cartCount={cartCount} />
+							<span>
+								Pagina {currentPage} din {totalPages || 1}
+							</span>
+
+							<button
+								type="button"
+								className="btn-filter"
+								disabled={currentPage === totalPages || totalPages === 0}
+								onClick={() => setCurrentPage(currentPage + 1)}
+                            >
+								Înainte
+							</button>
+						</div>
+					</main>
+				</div>
+            ) : (
+	<CartPage
+		cartItems={cartItems}
+		cartTotal={cartTotal}
+		removeFromCart={removeFromCart}
+		clearCart={clearCart}
+		checkout={checkout}
+		increaseCartItemQuantity={increaseCartItemQuantity}
+		decreaseCartItemQuantity={decreaseCartItemQuantity}
+		openShop={() => setCurrentView('shop')}
+                />
+            )}
+
+			<Footer />
 
 			{selectedImage && (
 			<button type="button" className="modal-overlay" onClick={() => setSelectedImage(null)} aria-label="Închide imaginea">
