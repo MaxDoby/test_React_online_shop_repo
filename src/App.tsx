@@ -1,23 +1,23 @@
 import './App.css';
-import ProductsOnPage from './components/productList.tsx';
-import Footer from './components/footer.tsx';
-import Header from './components/header.tsx';
-import FilterNav from './components/filterNav.tsx';
-import useAppState from './hooks/useAppState.ts';
-import logicFilterProducts from './utils/useFilter.ts';
-import calculatePagination from './utils/usePagination.ts';
-import NewsTicker from './components/newsTicker.tsx';
-import SearchCont from './components/searchCont.tsx';
-import CartPage from './components/cartPage.tsx';
+import ProductsOnPage from './components/ProductList.tsx';
+import Footer from './components/Footer.tsx';
+import Header from './components/Header.tsx';
+import FilterNav from './components/FilterNav.tsx';
+import useProducts from './hooks/useProducts.ts';
+import logicFilterProducts from './utils/productFilters.ts';
+import calculatePagination from './utils/pagination.ts';
+import NewsTicker from './components/NewsTicker.tsx';
+import SearchCont from './components/SearchCont.tsx';
+import CartPage from './pages/CartPage.tsx';
+import useCart from './hooks/useCart.ts';
 
 const App = () => {
-	const state = useAppState();
+	const productsState = useProducts();
+	const cartState = useCart();
 
 	const {
 		products,
 		categories,
-		cartCount,
-		addToCart,
 		searchQuery,
 		setSearchQuery,
 		currentPage,
@@ -27,16 +27,21 @@ const App = () => {
 		setActiveCategory,
 		totalProducts,
 		productsOnPage,
-		cartItems,
-		cartTotal,
 		currentView,
 		setCurrentView,
+	} = productsState;
+
+	const {
+		cartItems,
+		cartTotal,
+		cartCount,
+		addToCart,
 		removeFromCart,
 		clearCart,
 		checkout,
 		increaseCartItemQuantity,
 		decreaseCartItemQuantity,
-	} = state;
+	} = cartState;
 
 	// Filtrare si Logica
 	const filterProducts = (cat: string) => {
@@ -67,11 +72,7 @@ const App = () => {
 					</aside>
 
 					<main className="content-area">
-						<ProductsOnPage
-							productsToShow={products}
-							addToCart={addToCart}
-							setSelectedImage={setSelectedImage}
-						/>
+						<ProductsOnPage productsToShow={products} addToCart={addToCart} setSelectedImage={setSelectedImage} />
 
 						<div className="pagination-container">
 							<button type="button" className="btn-filter" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
@@ -99,10 +100,13 @@ const App = () => {
 		cartTotal={cartTotal}
 		removeFromCart={removeFromCart}
 		clearCart={clearCart}
-		checkout={checkout}
 		increaseCartItemQuantity={increaseCartItemQuantity}
 		decreaseCartItemQuantity={decreaseCartItemQuantity}
 		openShop={() => setCurrentView('shop')}
+		checkout={() => {
+                        checkout();
+                        setCurrentView('shop');
+                    }}
                 />
             )}
 

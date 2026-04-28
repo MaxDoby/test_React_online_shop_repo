@@ -1,4 +1,4 @@
-import type { Product } from '../hooks/useAppState';
+import type { Product } from '../hooks/useProducts';
 
 interface ProductsOnPage {
     productsToShow: Product[];

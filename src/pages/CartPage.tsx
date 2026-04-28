@@ -1,4 +1,4 @@
-import type { CartItem } from '../hooks/useAppState';
+import type { CartItem } from '../hooks/useCart';
 
 interface CartPageProps {
     cartItems: CartItem[];

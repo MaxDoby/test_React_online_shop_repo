@@ -1,5 +1,6 @@
 import React from 'react';
-import type { Product, CartItem } from '../hooks/useAppState';
+import type { Product } from '../hooks/useProducts.ts';
+import type { CartItem } from '../hooks/useCart.ts';
 
 type SetCartItems = React.Dispatch<React.SetStateAction<CartItem[]>>;
 
