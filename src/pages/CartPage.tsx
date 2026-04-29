@@ -1,4 +1,4 @@
-import type { CartItem } from '../hooks/useCart';
+import type { CartItem, OrderHistoryItem } from '../hooks/useCart';
 
 interface CartPageProps {
     cartItems: CartItem[];
@@ -9,6 +9,7 @@ interface CartPageProps {
     openShop: () => void;
     increaseCartItemQuantity: (productId: number) => void;
     decreaseCartItemQuantity: (productId: number) => void;
+    orderHistory: OrderHistoryItem[];
 }
 
 const CartPage = ({
@@ -20,6 +21,7 @@ const CartPage = ({
 	openShop,
 	increaseCartItemQuantity,
 	decreaseCartItemQuantity,
+	orderHistory,
 }: CartPageProps) => (
 	<section className="cart-page">
 		<div className="cart-page-header">
@@ -78,6 +80,41 @@ const CartPage = ({
 		</div>
 	</>
         )}
+
+		<section className="order-history-section">
+			<h2>Istoric comenzi</h2>
+
+			{orderHistory.length === 0 ? (
+				<p>Nu există comenzi salvate încă.</p>
+            ) : (
+	<div className="order-history-list">
+		{orderHistory
+                        .slice()
+                        .reverse()
+                        .map((order) => (
+	<article key={order.id} className="order-history-card">
+		<div className="order-history-header">
+			<span>Comandă: {order.id}</span>
+			<span>{new Date(order.createdAt).toLocaleString()}</span>
+		</div>
+
+		<p>Total: {order.total.toFixed(2)} Lei</p>
+
+		<div className="order-history-items">
+			{order.items.map((item) => (
+				<div key={`${order.id}-${item.id}`} className="order-history-item">
+					<span>{item.title}</span>
+					<span>
+						{item.quantity} x {item.price} Lei
+					</span>
+				</div>
+                                    ))}
+		</div>
+	</article>
+                        ))}
+	</div>
+            )}
+		</section>
 	</section>
 );
 

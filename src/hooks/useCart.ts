@@ -7,16 +7,27 @@ import {
 	logicDecreaseCartItemQuantity,
 } from '../utils/cartActions.ts';
 import type { Product } from './useProducts.ts';
+import { getUserCartStorageKey, getUserOrdersStorageKey } from '../utils/authHelpers.ts';
 
 export interface CartItem extends Product {
     quantity: number;
 }
 
-const cartStorageKey = 'mini-shop-cart';
+export interface OrderHistoryItem {
+    id: string;
+    userId: number | null;
+    items: CartItem[];
+    total: number;
+    createdAt: string;
+}
 
-const useCart = () => {
+const useCart = (userId: number | null) => {
 	const [cartItems, setCartItems] = useState<CartItem[]>([]);
 	const [isCartLoaded, setIsCartLoaded] = useState<boolean>(false);
+	const [orderHistory, setOrderHistory] = useState<OrderHistoryItem[]>([]);
+
+	const cartStorageKey = userId ? getUserCartStorageKey(userId) : 'mini-shop-cart';
+	const ordersStorageKey = userId ? getUserOrdersStorageKey(userId) : null;
 
 	const addToCart = (product: Product) => {
 		logicAddToCart(product, setCartItems);
@@ -33,24 +44,66 @@ const useCart = () => {
 	const decreaseCartItemQuantity = (productId: number) => {
 		logicDecreaseCartItemQuantity(productId, setCartItems);
 	};
+	const saveOrderToHistory = () => {
+		if (cartItems.length === 0 || !ordersStorageKey) return;
+
+		const savedOrders = localStorage.getItem(ordersStorageKey);
+
+		const parsedOrders: OrderHistoryItem[] = savedOrders ? JSON.parse(savedOrders) : [];
+
+		const newOrder: OrderHistoryItem = {
+			id: crypto.randomUUID(), // Aceasta metoda creaza un ID unic de fiecare data cand e aplicata
+			userId,
+			items: cartItems.map((item) => ({ ...item })), // snapshot al produselor din cos la momentul comenzii
+			total: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+			createdAt: new Date().toISOString(),
+		};
+
+		const updatedOrders = [...parsedOrders, newOrder];
+
+		localStorage.setItem(ordersStorageKey, JSON.stringify(updatedOrders));
+		setOrderHistory(updatedOrders); // salvam storage / actualizam starea / re-rendreing UI
+	};
+
 	const checkout = () => {
+		saveOrderToHistory();
 		alert('Comanda a fost plasată cu succes!');
 		setCartItems([]);
 	};
 
 	useEffect(() => {
+		setIsCartLoaded(false);
+
 		const savedCart = localStorage.getItem(cartStorageKey);
 
 		if (savedCart) {
 			setCartItems(JSON.parse(savedCart));
+		} else {
+			setCartItems([]);
 		}
+
 		setIsCartLoaded(true);
-	}, []);
+	}, [cartStorageKey]);
+
+	useEffect(() => {
+		if (!ordersStorageKey) {
+			setOrderHistory([]);
+			return;
+		}
+
+		const savedOrders = localStorage.getItem(ordersStorageKey);
+
+		if (savedOrders) {
+			setOrderHistory(JSON.parse(savedOrders));
+		} else {
+			setOrderHistory([]);
+		}
+	}, [ordersStorageKey]);
 
 	useEffect(() => {
 		if (!isCartLoaded) return;
 		localStorage.setItem(cartStorageKey, JSON.stringify(cartItems));
-	}, [cartItems, isCartLoaded]);
+	}, [cartItems, isCartLoaded, cartStorageKey]);
 
 	const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 	const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -66,6 +119,7 @@ const useCart = () => {
 		checkout,
 		increaseCartItemQuantity,
 		decreaseCartItemQuantity,
+		orderHistory,
 	};
 };
 

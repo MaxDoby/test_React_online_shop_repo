@@ -1,19 +1,30 @@
 import './App.css';
-import ProductsOnPage from './components/ProductList.tsx';
+
+import {
+	Navigate, Routes, Route, useNavigate,
+} from 'react-router-dom';
+import AuthPage from './pages/AuthPage.tsx';
+import useAuth from './hooks/useAuth.ts';
+
 import Footer from './components/Footer.tsx';
 import Header from './components/Header.tsx';
-import FilterNav from './components/FilterNav.tsx';
-import useProducts from './hooks/useProducts.ts';
-import logicFilterProducts from './utils/productFilters.ts';
-import calculatePagination from './utils/pagination.ts';
 import NewsTicker from './components/NewsTicker.tsx';
 import SearchCont from './components/SearchCont.tsx';
 import CartPage from './pages/CartPage.tsx';
+import ProductsPage from './pages/ProductsPage.tsx';
+
+import useProducts from './hooks/useProducts.ts';
 import useCart from './hooks/useCart.ts';
 
+import logicFilterProducts from './utils/productFilters.ts';
+import calculatePagination from './utils/pagination.ts';
+
 const App = () => {
+	const navigate = useNavigate();
+
 	const productsState = useProducts();
-	const cartState = useCart();
+	const authState = useAuth();
+	const cartState = useCart(authState.authUser?.id ?? null);
 
 	const {
 		products,
@@ -27,8 +38,6 @@ const App = () => {
 		setActiveCategory,
 		totalProducts,
 		productsOnPage,
-		currentView,
-		setCurrentView,
 	} = productsState;
 
 	const {
@@ -41,7 +50,16 @@ const App = () => {
 		checkout,
 		increaseCartItemQuantity,
 		decreaseCartItemQuantity,
+		orderHistory,
 	} = cartState;
+
+	const {
+		login,
+		logout,
+		isAuthenticated,
+		authUser,
+		registerLocal,
+	} = authState;
 
 	// Filtrare si Logica
 	const filterProducts = (cat: string) => {
@@ -56,7 +74,15 @@ const App = () => {
 			{/* Background animat */}
 			<div className="bg-animated" />
 
-			<Header cartCount={cartCount} openCart={() => setCurrentView('cart')} openShop={() => setCurrentView('shop')} />
+			<Header
+				cartCount={cartCount}
+				openCart={() => navigate('/cart')}
+				openShop={() => navigate('/products')}
+				openAuth={() => navigate('/auth')}
+				logout={logout}
+				isAuthenticated={isAuthenticated}
+				authUsername={authUser?.username || null}
+            />
 
 			{/* Componenta NewsTicker sub Header */}
 			<NewsTicker />
@@ -64,51 +90,66 @@ const App = () => {
 			<SearchCont searchQuery={searchQuery} setSearchQuery={setSearchQuery} setCurrentPage={setCurrentPage} />
 
 			{/* NOU: Layout principal cu doua coloane */}
-			{currentView === 'shop' ? (
-				<div className="main-layout">
-					<aside className="sidebar">
-						<h3 className="sidebar-title">Categorii</h3>
-						<FilterNav categories={categories} filterProducts={filterProducts} />
-					</aside>
-
-					<main className="content-area">
-						<ProductsOnPage productsToShow={products} addToCart={addToCart} setSelectedImage={setSelectedImage} />
-
-						<div className="pagination-container">
-							<button type="button" className="btn-filter" disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-								Înapoi
-							</button>
-
-							<span>
-								Pagina {currentPage} din {totalPages || 1}
-							</span>
-
-							<button
-								type="button"
-								className="btn-filter"
-								disabled={currentPage === totalPages || totalPages === 0}
-								onClick={() => setCurrentPage(currentPage + 1)}
-                            >
-								Înainte
-							</button>
-						</div>
-					</main>
-				</div>
-            ) : (
-	<CartPage
-		cartItems={cartItems}
-		cartTotal={cartTotal}
-		removeFromCart={removeFromCart}
-		clearCart={clearCart}
-		increaseCartItemQuantity={increaseCartItemQuantity}
-		decreaseCartItemQuantity={decreaseCartItemQuantity}
-		openShop={() => setCurrentView('shop')}
-		checkout={() => {
-                        checkout();
-                        setCurrentView('shop');
-                    }}
+			<Routes>
+				<Route
+					path="/products"
+					element={(
+						<ProductsPage
+							categories={categories}
+							filterProducts={filterProducts}
+							products={products}
+							addToCart={addToCart}
+							setSelectedImage={setSelectedImage}
+							currentPage={currentPage}
+							totalPages={totalPages}
+							setCurrentPage={setCurrentPage}
+                        />
+                      )}
                 />
-            )}
+				<Route
+					path="/cart"
+					element={(
+						<CartPage
+							cartItems={cartItems}
+							cartTotal={cartTotal}
+							removeFromCart={removeFromCart}
+							clearCart={clearCart}
+							increaseCartItemQuantity={increaseCartItemQuantity}
+							decreaseCartItemQuantity={decreaseCartItemQuantity}
+							orderHistory={orderHistory}
+							openShop={() => navigate('/products')}
+							checkout={() => {
+                                if (!isAuthenticated) {
+                                    alert('Autentificati-va sau creati un cont pentru a plasa comanda.');
+                                    navigate('/auth');
+                                    return;
+                                }
+
+                                checkout();
+                                navigate('/products');
+                            }}
+                        />
+                      )}
+                />
+				<Route
+					path="/auth"
+					element={(
+						<AuthPage
+							login={async (username, password) => {
+                                await login(username, password);
+                                navigate('/products');
+                            }}
+							registerLocal={async (username, password, email, firstName, lastName) => {
+                                await registerLocal(username, password, email, firstName, lastName);
+                                navigate('/products');
+                            }}
+							isAuthenticated={isAuthenticated}
+                        />
+                      )}
+                />
+
+				<Route path="*" element={<Navigate to="/products" replace />} />
+			</Routes>
 
 			<Footer />
 

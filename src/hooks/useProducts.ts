@@ -21,7 +21,6 @@ const useProducts = () => {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 	const [activeCategory, setActiveCategory] = useState<string>('Toate');
 	const [totalProducts, setTotalProducts] = useState<number>(0);
-	const [currentView, setCurrentView] = useState<'shop' | 'cart'>('shop');
 
 	useEffect(() => {
 		const loadCategories = async () => {
@@ -87,8 +86,6 @@ const useProducts = () => {
 		totalProducts,
 		setTotalProducts,
 		productsOnPage,
-		currentView,
-		setCurrentView,
 	};
 };
 
