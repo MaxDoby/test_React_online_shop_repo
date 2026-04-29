@@ -144,6 +144,7 @@ const App = () => {
                                 navigate('/products');
                             }}
 							isAuthenticated={isAuthenticated}
+							openShop={() => navigate('/products')}
                         />
                       )}
                 />

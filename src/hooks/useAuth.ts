@@ -138,7 +138,7 @@ const useAuth = () => {
 		const data = await response.json();
 
 		if (!data.accessToken || !data.refreshToken || !data.id) {
-			throw new Error(data.message || 'Autentificare eșuată.');
+			throw new Error('Autentificare eșuată.');
 		}
 
 		const authUserData: AuthUser = {

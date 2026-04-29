@@ -10,9 +10,15 @@ interface AuthPageProps {
 		lastName: string,
 	) => Promise<void>;
 	isAuthenticated: boolean;
+	openShop: () => void;
 }
 
-const AuthPage = ({ login, registerLocal, isAuthenticated }: AuthPageProps) => {
+const AuthPage = ({
+	login,
+	registerLocal,
+	isAuthenticated,
+	openShop,
+}: AuthPageProps) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
@@ -110,7 +116,7 @@ const AuthPage = ({ login, registerLocal, isAuthenticated }: AuthPageProps) => {
 	} else {
 		authContent = (
 			<>
-				<h2>Înregistrare</h2>
+				<h2>Creare cont:</h2>
 
 				<form className="auth-form" onSubmit={handleSubmit}>
 					<input
@@ -176,7 +182,12 @@ const AuthPage = ({ login, registerLocal, isAuthenticated }: AuthPageProps) => {
 
 	return (
 		<section className="auth-page">
-			<div className="auth-card">{authContent}</div>
+			<div className="auth-card">
+				<button type="button" className="btn-filter auth-back-button" onClick={openShop}>
+					Inapoi la produse
+				</button>
+				{authContent}
+			</div>
 		</section>
 	);
 };

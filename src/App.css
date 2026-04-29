@@ -601,6 +601,10 @@ input {
 	gap: 16px;
 }
 
+.auth-back-button {
+	align-self: flex-start;
+}
+
 .auth-form {
 	display: flex;
 	flex-direction: column;
