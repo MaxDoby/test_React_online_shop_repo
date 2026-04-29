@@ -13,7 +13,6 @@ export interface AuthUser {
 	email: string;
 	firstName: string;
 	lastName: string;
-	image: string
 }
 
 interface LocalAuthUser extends AuthUser {
@@ -77,7 +76,6 @@ const useAuth = () => {
 			email,
 			firstName,
 			lastName,
-			image: `https://dummyjson.com/icon/${username}/128`,
 		};
 
 		saveLocalAuthUsers([...localUsers, newUser]);
@@ -88,7 +86,6 @@ const useAuth = () => {
 			email: newUser.email,
 			firstName: newUser.firstName,
 			lastName: newUser.lastName,
-			image: newUser.image,
 		};
 
 		const localAccessToken = `local-access-token-${newUser.id}`;
@@ -113,7 +110,6 @@ const useAuth = () => {
 				email: localUser.email,
 				firstName: localUser.firstName,
 				lastName: localUser.lastName,
-				image: localUser.image,
 			};
 
 			const localAccessToken = `local-access-token-${localUser.id}`;
@@ -151,7 +147,6 @@ const useAuth = () => {
 			email: data.email,
 			firstName: data.firstName,
 			lastName: data.lastName,
-			image: data.image,
 		};
 
 		setAuthUser(authUserData);
